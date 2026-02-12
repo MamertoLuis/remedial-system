@@ -1,0 +1,11 @@
+/.venv/
+venv/
+env/
+/pip-wheel-metadata/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+docs/_build/

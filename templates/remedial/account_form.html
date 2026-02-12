@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:remedialaccount-list' %}">Accounts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Account Form</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.loan_account_no.id_for_label }}" class="form-label">Account Number</label>
+                            {{ form.loan_account_no }}
+                            {% if form.loan_account_no.errors %}
+                                <div class="text-danger small">{{ form.loan_account_no.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.borrower_name.id_for_label }}" class="form-label">Borrower Name</label>
+                            {{ form.borrower_name }}
+                            {% if form.borrower_name.errors %}
+                                <div class="text-danger small">{{ form.borrower_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.borrower_id_ref.id_for_label }}" class="form-label">Borrower ID Reference</label>
+                            {{ form.borrower_id_ref }}
+                            {% if form.borrower_id_ref.errors %}
+                                <div class="text-danger small">{{ form.borrower_id_ref.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.outstanding_balance_ref.id_for_label }}" class="form-label">Outstanding Balance</label>
+                            {{ form.outstanding_balance_ref }}
+                            {% if form.outstanding_balance_ref.errors %}
+                                <div class="text-danger small">{{ form.outstanding_balance_ref.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.stage.id_for_label }}" class="form-label">Stage</label>
+                            {{ form.stage }}
+                            {% if form.stage.errors %}
+                                <div class="text-danger small">{{ form.stage.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small">{{ form.status.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.assigned_officer.id_for_label }}" class="form-label">Assigned Officer</label>
+                            {{ form.assigned_officer }}
+                            {% if form.assigned_officer.errors %}
+                                <div class="text-danger small">{{ form.assigned_officer.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.remarks.id_for_label }}" class="form-label">Remarks</label>
+                            {{ form.remarks }}
+                            {% if form.remarks.errors %}
+                                <div class="text-danger small">{{ form.remarks.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.metadata.id_for_label }}" class="form-label">Metadata (JSON)</label>
+                    {{ form.metadata }}
+                    {% if form.metadata.errors %}
+                        <div class="text-danger small">{{ form.metadata.errors }}</div>
+                    {% endif %}
+                    <div class="form-text">Optional JSON metadata for additional account information</div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'remedial:remedialaccount-list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

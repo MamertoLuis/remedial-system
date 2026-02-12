@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:recoverymilestone-create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Milestone
+            </a>
+        </div>
+    </div>
+
+    {% if milestones %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Action</th>
+                            <th>Milestone Type</th>
+                            <th>Status</th>
+                            <th>Target Date</th>
+                            <th>Actual Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for milestone in milestones %}
+                        <tr>
+                            <td>
+                                {% if milestone.recovery_action %}
+                                    {{ milestone.recovery_action.action_type }}
+                                {% else %}
+                                    <span class="text-muted">No action linked</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ milestone.get_milestone_type_display }}</td>
+                            <td>
+                                <span class="badge bg-{{ milestone.status|lower }}">
+                                    {{ milestone.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ milestone.target_date }}</td>
+                            <td>{{ milestone.actual_date|default:"Not completed" }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'remedial:recoverymilestone-detail' milestone.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'remedial:recoverymilestone-update' milestone.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-flag-checkered fa-3x text-muted mb-3"></i>
+            <h5>No Recovery Milestones Found</h5>
+            <p class="text-muted">Create your first recovery milestone to get started.</p>
+            <a href="{% url 'remedial:recoverymilestone-create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Milestone
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

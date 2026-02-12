@@ -1,0 +1,712 @@
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Sum, Count
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.html import format_html
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView, DeleteView
+from django.views.generic.base import TemplateView
+from django.contrib import messages
+
+from . import forms, models, selectors, services
+
+
+# ===== PERMISSION MIXINS =====
+
+class RemedialPermissionMixin(LoginRequiredMixin, PermissionRequiredMixin):
+    """Base mixin for remedial app permissions"""
+    permission_required = "remedial.view_remedialaccount"
+    raise_exception = True
+
+    def get_permission_required(self):
+        """Override to dynamically set permissions based on action"""
+        action = self.action if hasattr(self, 'action') else self.request.method.lower()
+        model_name = self.model.__name__.lower()
+        
+        permissions_map = {
+            'view': f'remedial.view_{model_name}',
+            'add': f'remedial.add_{model_name}',
+            'change': f'remedial.change_{model_name}',
+            'delete': f'remedial.delete_{model_name}',
+        }
+        
+        return permissions_map.get(action, self.permission_required)
+
+
+# ===== DASHBOARD VIEWS =====
+
+class DashboardView(RemedialPermissionMixin, TemplateView):
+    """Main dashboard with summary statistics"""
+    template_name = "remedial/dashboard.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tenant = getattr(self.request, "tenant", None)
+        
+        # Get dashboard metrics
+        context.update(selectors.get_dashboard_metrics(tenant))
+        
+        # Get recent activities
+        context["recent_accounts"] = selectors.dashboard_accounts_overview(tenant)[:10]
+        context["recent_compromises"] = selectors.active_compromise_agreements(tenant)[:5]
+        
+        return context
+
+
+class AccountsDashboardView(RemedialPermissionMixin, TemplateView):
+    """Accounts-specific dashboard"""
+    template_name = "remedial/accounts_dashboard.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tenant = getattr(self.request, "tenant", None)
+        officer = getattr(self.request.user, "profile", None)  # Assuming profile exists
+        
+        # Get filtered data based on officer role
+        context["accounts"] = selectors.dashboard_accounts_overview(
+            tenant, 
+            officer=officer,
+            stage=self.request.GET.get('stage'),
+            status=self.request.GET.get('status'),
+            days=30
+        )
+        
+        context["summary"] = selectors.summary_statistics(tenant)
+        context["search_form"] = forms.RemedialAccountSearchForm(self.request.GET)
+        
+        return context
+
+
+# ===== REMEDIAL ACCOUNT VIEWS =====
+
+class RemedialAccountListView(RemedialPermissionMixin, ListView):
+    """Enhanced list view with search and filtering"""
+    model = models.RemedialAccount
+    paginate_by = 25
+    template_name = "remedial/remedialaccount_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        queryset = selectors.dashboard_accounts_overview(tenant)
+        
+        # Apply search form filters
+        search_form = forms.RemedialAccountSearchForm(self.request.GET)
+        if search_form.is_valid():
+            loan_no = search_form.cleaned_data.get("loan_account_no")
+            borrower = search_form.cleaned_data.get("borrower_name")
+            stage = search_form.cleaned_data.get("stage")
+            status = search_form.cleaned_data.get("status")
+            officer = search_form.cleaned_data.get("assigned_officer")
+            
+            if loan_no:
+                queryset = queryset.filter(loan_account_no__icontains=loan_no)
+            if borrower:
+                queryset = queryset.filter(borrower_name__icontains=borrower)
+            if stage:
+                queryset = queryset.filter(stage=stage)
+            if status:
+                queryset = queryset.filter(status=status)
+            if officer:
+                queryset = queryset.filter(assigned_officer=officer)
+        
+        return queryset.order_by("-created_at")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = forms.RemedialAccountSearchForm(self.request.GET)
+        return context
+
+
+class RemedialAccountDetailView(RemedialPermissionMixin, DetailView):
+    """Enhanced detail view with related objects"""
+    model = models.RemedialAccount
+    template_name = "remedial/remedialaccount_detail.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return selectors.remedial_accounts_for_tenant(tenant)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Related objects
+        context["compromises"] = self.object.compromise_agreements.order_by("-created_at")
+        context["legal_cases"] = self.object.legal_cases.order_by("-created_at")
+        context["recovery_actions"] = self.object.recovery_actions.order_by("-created_at")
+        context["write_off_requests"] = self.object.write_off_requests.order_by("-created_at")
+        context["documents"] = self.object.remedial_documents.filter(is_deleted=False).order_by("-version", "-uploaded_at")
+        
+        # Summary statistics for this account
+        context["total_compromise_amount"] = context["compromises"].aggregate(total=Sum("settlement_amount"))["total"] or 0
+        context["total_paid_amount"] = sum(
+            payment.amount for compromise in context["compromises"] 
+            for payment in compromise.payments.all()
+        )
+        
+        return context
+
+
+class RemedialAccountUpdateView(RemedialPermissionMixin, SuccessMessageMixin, UpdateView):
+    """Update remedial account"""
+    model = models.RemedialAccount
+    form_class = forms.RemedialAccountForm
+    template_name = "remedial/remedialaccount_form.html"
+    success_message = "Account updated successfully."
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return selectors.remedial_accounts_for_tenant(tenant)
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-detail", args=[self.object.pk])
+
+
+class RemedialAccountDeleteView(RemedialPermissionMixin, DeleteView):
+    """Delete remedial account"""
+    model = models.RemedialAccount
+    template_name = "remedial/remedialaccount_confirm_delete.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return selectors.remedial_accounts_for_tenant(tenant)
+    
+    def get_success_url(self):
+        messages.success(self.request, "Account deleted successfully.")
+        return reverse("remedial:remedialaccount-list")
+
+
+# ===== COMPROMISE VIEWS =====
+
+class CompromiseAgreementListView(RemedialPermissionMixin, ListView):
+    """List all compromise agreements"""
+    model = models.CompromiseAgreement
+    paginate_by = 20
+    template_name = "remedial/compromiseagreement_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        queryset = selectors.active_compromise_agreements(tenant)
+        
+        # Apply filters
+        filter_form = forms.CompromiseFilterForm(self.request.GET)
+        if filter_form.is_valid():
+            status = filter_form.cleaned_data.get("status")
+            agreement_no = filter_form.cleaned_data.get("agreement_no")
+            
+            if status:
+                queryset = queryset.filter(status=status)
+            if agreement_no:
+                queryset = queryset.filter(agreement_no__icontains=agreement_no)
+        
+        return queryset.order_by("-created_at")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filter_form"] = forms.CompromiseFilterForm(self.request.GET)
+        return context
+
+
+class CompromiseAgreementDetailView(RemedialPermissionMixin, DetailView):
+    """Detail view for compromise agreement"""
+    model = models.CompromiseAgreement
+    template_name = "remedial/compromiseagreement_detail.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.CompromiseAgreement.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "approved_by", "created_by"
+        ).prefetch_related("schedule_items", "payments")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Payment summary
+        context["total_paid"] = self.object.payments.aggregate(total=Sum("amount"))["total"] or 0
+        context["schedule_items"] = self.object.schedule_items.order_by("due_date")
+        
+        # Progress calculation
+        total_due = sum(item.amount_due for item in context["schedule_items"])
+        context["progress_percentage"] = (
+            (context["total_paid"] / total_due * 100) if total_due > 0 else 0
+        )
+        
+        return context
+
+
+class CompromiseAgreementUpdateView(RemedialPermissionMixin, SuccessMessageMixin, UpdateView):
+    """Update compromise agreement"""
+    model = models.CompromiseAgreement
+    form_class = forms.CompromiseAgreementForm
+    template_name = "remedial/compromiseagreement_form.html"
+    success_message = "Compromise agreement updated successfully."
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.CompromiseAgreement.objects.filter(tenant=tenant)
+    
+    def get_success_url(self):
+        return reverse("remedial:compromiseagreement-detail", args=[self.object.pk])
+
+
+# ===== LEGAL CASE VIEWS =====
+
+class LegalCaseListView(RemedialPermissionMixin, ListView):
+    """List all legal cases"""
+    model = models.LegalCase
+    paginate_by = 20
+    template_name = "remedial/legalcase_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.LegalCase.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "created_by"
+        ).order_by("-created_at")
+
+
+class LegalCaseDetailView(RemedialPermissionMixin, DetailView):
+    """Detail view for legal case"""
+    model = models.LegalCase
+    template_name = "remedial/legalcase_detail.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.LegalCase.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "created_by"
+        ).prefetch_related("hearings")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["hearings"] = self.object.hearings.order_by("-hearing_date")
+        return context
+
+
+class LegalCaseUpdateView(RemedialPermissionMixin, SuccessMessageMixin, UpdateView):
+    """Update legal case"""
+    model = models.LegalCase
+    form_class = forms.LegalCaseForm
+    template_name = "remedial/legalcase_form.html"
+    success_message = "Legal case updated successfully."
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.LegalCase.objects.filter(tenant=tenant)
+    
+    def get_success_url(self):
+        return reverse("remedial:legalcase-detail", args=[self.object.pk])
+
+
+# ===== RECOVERY ACTION VIEWS =====
+
+class RecoveryActionListView(RemedialPermissionMixin, ListView):
+    """List all recovery actions"""
+    model = models.RecoveryAction
+    paginate_by = 20
+    template_name = "remedial/recoveryaction_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.RecoveryAction.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "initiated_by"
+        ).order_by("-created_at")
+
+
+class RecoveryActionDetailView(RemedialPermissionMixin, DetailView):
+    """Detail view for recovery action"""
+    model = models.RecoveryAction
+    template_name = "remedial/recoveryaction_detail.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.RecoveryAction.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "initiated_by"
+        ).prefetch_related("milestones")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["milestones"] = self.object.milestones.order_by("target_date")
+        return context
+
+
+# ===== WRITE-OFF REQUEST VIEWS =====
+
+class WriteOffRequestListView(RemedialPermissionMixin, ListView):
+    """List all write-off requests"""
+    model = models.WriteOffRequest
+    paginate_by = 20
+    template_name = "remedial/writeoffrequest_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.WriteOffRequest.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "recommended_by"
+        ).order_by("-recommended_at")
+
+
+class WriteOffRequestDetailView(RemedialPermissionMixin, DetailView):
+    """Detail view for write-off request"""
+    model = models.WriteOffRequest
+    template_name = "remedial/writeoffrequest_detail.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.WriteOffRequest.objects.filter(tenant=tenant).select_related(
+            "remedial_account", "recommended_by"
+        )
+
+
+# ===== DOCUMENT VIEWS =====
+
+class RemedialDocumentListView(RemedialPermissionMixin, ListView):
+    """List all documents"""
+    model = models.RemedialDocument
+    paginate_by = 25
+    template_name = "remedial/remedialdocument_list.html"
+    
+    def get_queryset(self):
+        tenant = getattr(self.request, "tenant", None)
+        return models.RemedialDocument.objects.filter(
+            tenant=tenant, is_deleted=False
+        ).select_related("uploaded_by").order_by("-uploaded_at")
+
+
+class RemedialDocumentDetailView(RemedialPermissionMixin, DetailView):
+    """Detail view for document"""
+    model = models.RemedialDocument
+    template_name = "remedial/remedialdocument_detail.html"
+
+
+class RemedialDocumentDeleteView(RemedialPermissionMixin, DeleteView):
+    """Delete document (soft delete)"""
+    model = models.RemedialDocument
+    template_name = "remedial/remedialdocument_confirm_delete.html"
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        services.DocumentService.delete_document(self.object, request.user)
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-list")
+
+
+# ===== CREATE VIEWS =====
+
+class CompromiseAgreementCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create compromise agreement for an account"""
+    model = models.CompromiseAgreement
+    form_class = forms.CompromiseAgreementForm
+    template_name = "remedial/compromiseagreement_form.html"
+    success_message = "Compromise agreement created successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        account = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        
+        form.instance.tenant = tenant
+        form.instance.remedial_account = account
+        form.instance.created_by = self.request.user
+        
+        response = super().form_valid(form)
+        
+        # Create initial schedule items if needed
+        if form.cleaned_data.get("auto_generate_schedule"):
+            # Auto-generate schedule based on settlement amount and term
+            pass
+        
+        # Update account stage
+        services.RemedialAccountService.update_stage(
+            account, models.RemedialStage.COMPROMISE, self.request.user
+        )
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-detail", args=[self.kwargs["account_pk"]])
+
+
+class CompromiseScheduleItemCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create schedule item for compromise agreement"""
+    model = models.CompromiseScheduleItem
+    form_class = forms.CompromiseScheduleItemForm
+    template_name = "remedial/scheduleitem_form.html"
+    success_message = "Schedule item created successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["compromise"] = get_object_or_404(models.CompromiseAgreement, pk=self.kwargs["compromise_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        compromise = get_object_or_404(models.CompromiseAgreement, pk=self.kwargs["compromise_pk"])
+        
+        form.instance.compromise_agreement = compromise
+        
+        # Check total doesn't exceed settlement amount
+        total_existing = sum(item.amount_due for item in compromise.schedule_items.all())
+        if total_existing + form.instance.amount_due > compromise.settlement_amount:
+            form.add_error(None, "Total scheduled amount exceeds settlement amount")
+            return self.form_invalid(form)
+        
+        response = super().form_valid(form)
+        
+        # Check if compromise is completed
+        services.CompromiseAgreementService.check_compromise_completion(compromise)
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:compromiseagreement-detail", args=[self.kwargs["compromise_pk"]])
+
+
+class CompromisePaymentCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create payment for compromise agreement"""
+    model = models.CompromisePayment
+    form_class = forms.CompromisePaymentForm
+    template_name = "remedial/compromisepayment_form.html"
+    success_message = "Payment recorded successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["compromise"] = get_object_or_404(models.CompromiseAgreement, pk=self.kwargs["compromise_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        compromise = get_object_or_404(models.CompromiseAgreement, pk=self.kwargs["compromise_pk"])
+        
+        form.instance.compromise_agreement = compromise
+        form.instance.received_by = self.request.user
+        
+        response = super().form_valid(form)
+        
+        # Record payment and update schedule
+        services.CompromiseAgreementService.record_compromise_payment(
+            compromise, form.instance.amount, self.request.user, form.instance.schedule_item
+        )
+        
+        # Check if compromise is completed
+        services.CompromiseAgreementService.check_compromise_completion(compromise)
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:compromiseagreement-detail", args=[self.kwargs["compromise_pk"]])
+
+
+class LegalCaseCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create legal case for account"""
+    model = models.LegalCase
+    form_class = forms.LegalCaseForm
+    template_name = "remedial/legalcase_form.html"
+    success_message = "Legal case created successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        account = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        
+        form.instance.tenant = tenant
+        form.instance.remedial_account = account
+        form.instance.created_by = self.request.user
+        
+        response = super().form_valid(form)
+        
+        # Update account stage
+        services.RemedialAccountService.update_stage(
+            account, models.RemedialStage.LEGAL, self.request.user
+        )
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-detail", args=[self.kwargs["account_pk"]])
+
+
+class CourtHearingCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create court hearing for legal case"""
+    model = models.CourtHearing
+    form_class = forms.CourtHearingForm
+    template_name = "remedial/court_hearing_form.html"
+    success_message = "Court hearing scheduled successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["legal_case"] = get_object_or_404(models.LegalCase, pk=self.kwargs["case_pk"])
+        return context
+    
+    def form_valid(self, form):
+        legal_case = get_object_or_404(models.LegalCase, pk=self.kwargs["case_pk"])
+        
+        form.instance.legal_case = legal_case
+        
+        response = super().form_valid(form)
+        
+        # Update legal case status if filed
+        if form.cleaned_data.get("status") == "done":
+            legal_case.status = models.LegalCaseStatus.ACTIVE
+            legal_case.save()
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:legalcase-detail", args=[self.kwargs["case_pk"]])
+
+
+class RecoveryActionCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create recovery action for account"""
+    model = models.RecoveryAction
+    form_class = forms.RecoveryActionForm
+    template_name = "remedial/recoveryaction_form.html"
+    success_message = "Recovery action initiated successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        account = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        
+        form.instance.tenant = tenant
+        form.instance.remedial_account = account
+        form.instance.initiated_by = self.request.user
+        
+        response = super().form_valid(form)
+        
+        # Update account stage and create milestones
+        services.RecoveryActionService.initiate_recovery_action(
+            tenant, account, form.cleaned_data["action_type"], self.request.user
+        )
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-detail", args=[self.kwargs["account_pk"]])
+
+
+class RecoveryMilestoneCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create recovery milestone for action"""
+    model = models.RecoveryMilestone
+    form_class = forms.RecoveryMilestoneForm
+    template_name = "remedial/recoverymilestone_form.html"
+    success_message = "Recovery milestone created successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recovery_action"] = get_object_or_404(models.RecoveryAction, pk=self.kwargs["action_pk"])
+        return context
+    
+    def form_valid(self, form):
+        recovery_action = get_object_or_404(models.RecoveryAction, pk=self.kwargs["action_pk"])
+        
+        form.instance.recovery_action = recovery_action
+        
+        response = super().form_valid(form)
+        
+        # Check if all milestones are completed
+        all_completed = all(milestone.status == "done" for milestone in recovery_action.milestones.all())
+        if all_completed and recovery_action.status != models.RecoveryActionStatus.COMPLETED:
+            recovery_action.status = models.RecoveryActionStatus.COMPLETED
+            recovery_action.save()
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:recoveryaction-detail", args=[self.kwargs["action_pk"]])
+
+
+class WriteOffRequestCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Create write-off request for account"""
+    model = models.WriteOffRequest
+    form_class = forms.WriteOffRequestForm
+    template_name = "remedial/writeoffrequest_form.html"
+    success_message = "Write-off request submitted successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["account"] = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        account = get_object_or_404(models.RemedialAccount, pk=self.kwargs["account_pk"])
+        
+        form.instance.tenant = tenant
+        form.instance.remedial_account = account
+        
+        response = super().form_valid(form)
+        
+        # Create recommendation
+        services.WriteOffService.recommend_write_off(
+            tenant, account, self.request.user, form.cleaned_data.get("notes", "")
+        )
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialaccount-detail", args=[self.kwargs["account_pk"]])
+
+
+class RemedialDocumentCreateView(RemedialPermissionMixin, SuccessMessageMixin, CreateView):
+    """Upload document for remedial entity"""
+    model = models.RemedialDocument
+    form_class = forms.RemedialDocumentForm
+    template_name = "remedial/remedialdocument_form.html"
+    success_message = "Document uploaded successfully."
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["entity_type"] = self.request.GET.get("entity_type")
+        context["entity_id"] = self.request.GET.get("entity_id")
+        return context
+    
+    def form_valid(self, form):
+        tenant = getattr(self.request, "tenant", None)
+        
+        form.instance.tenant = tenant
+        form.instance.uploaded_by = self.request.user
+        form.instance.entity_type = form.cleaned_data["entity_type"]
+        form.instance.entity_id = form.cleaned_data["entity_id"]
+        
+        response = super().form_valid(form)
+        
+        # Upload document with version control
+        services.DocumentService.upload_document(
+            tenant,
+            form.cleaned_data["entity_type"],
+            form.cleaned_data["entity_id"],
+            form.cleaned_data["doc_type"],
+            form.cleaned_data["file"],
+            self.request.user,
+            form.cleaned_data.get("is_confidential", True)
+        )
+        
+        return response
+    
+    def get_success_url(self):
+        return reverse("remedial:remedialdocument-list")
+
+
+# ===== WORKFLOW VIEWS =====
+
+@login_required
+@permission_required("remedial.change_compromiseagreement", raise_exception=True)
+def approve_compromise_view(request, pk):
+    """Approve compromise agreement (workflow endpoint)"""
+    tenant = getattr(request, "tenant", None)
+    compromise = get_object_or_404(models.CompromiseAgreement, pk=pk, tenant=tenant)
+    services.CompromiseAgreementService.approve_compromise(compromise, request.user)
+    messages.success(request, "Compromise approved successfully.")
+    return redirect(reverse("remedial:remedialaccount-detail", args=[compromise.remedial_account.pk]))

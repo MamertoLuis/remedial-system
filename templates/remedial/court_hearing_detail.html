@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:legalcase-list' %}">Legal Cases</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:courthearing-list' %}">Court Hearings</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:courthearing-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:courthearing-update' hearing.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Hearing
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-gavel me-2"></i>Hearing Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Hearing Date:</dt>
+                        <dd class="col-sm-9">{{ hearing.hearing_date }}</dd>
+                        
+                        <dt class="col-sm-3">Hearing Type:</dt>
+                        <dd class="col-sm-9">{{ hearing.get_hearing_type_display }}</dd>
+                        
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-{{ hearing.status|lower }}">
+                                {{ hearing.get_status_display }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-3">Notes:</dt>
+                        <dd class="col-sm-9">{{ hearing.notes|default:"No notes" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i>Related Legal Case
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if hearing.legal_case %}
+                        <p><strong>Case Number:</strong> {{ hearing.legal_case.case_number }}</p>
+                        <p><strong>Court:</strong> {{ hearing.legal_case.court_name }}</p>
+                        <p><strong>Status:</strong> {{ hearing.legal_case.get_status_display }}</p>
+                        <a href="{% url 'remedial:legalcase-detail' hearing.legal_case.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View Case
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No legal case linked</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Created By:</strong> {{ hearing.created_by|default:"System" }}</p>
+                    <p><strong>Created At:</strong> {{ hearing.created_at }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

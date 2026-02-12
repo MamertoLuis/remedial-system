@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:legalcase-list' %}">Legal Cases</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:legalcase-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:legalcase-update' legal_case.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Case
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-gavel me-2"></i>Case Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Case Number:</dt>
+                        <dd class="col-sm-9">{{ legal_case.case_number }}</dd>
+                        
+                        <dt class="col-sm-3">Case Type:</dt>
+                        <dd class="col-sm-9">{{ legal_case.get_case_type_display }}</dd>
+                        
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-{{ legal_case.status|lower }}">
+                                {{ legal_case.get_status_display }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-3">Court Name:</dt>
+                        <dd class="col-sm-9">{{ legal_case.court_name }}</dd>
+                        
+                        <dt class="col-sm-3">Court Branch:</dt>
+                        <dd class="col-sm-9">{{ legal_case.court_branch }}</dd>
+                        
+                        <dt class="col-sm-3">Filing Date:</dt>
+                        <dd class="col-sm-9">{{ legal_case.filing_date }}</dd>
+                        
+                        <dt class="col-sm-3">Next Hearing Date:</dt>
+                        <dd class="col-sm-9">{{ legal_case.next_hearing_date|default:"Not scheduled" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i>Related Account
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if legal_case.remedial_account %}
+                        <p><strong>Account Number:</strong> {{ legal_case.remedial_account.loan_account_no }}</p>
+                        <p><strong>Borrower Name:</strong> {{ legal_case.remedial_account.borrower_name }}</p>
+                        <p><strong>Balance:</strong> ₱{{ legal_case.remedial_account.outstanding_balance_ref }}</p>
+                        <a href="{% url 'remedial:account-detail' legal_case.remedial_account.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View Account
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No account linked</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2"></i>Assigned Counsel
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if legal_case.assigned_counsel %}
+                        <p><strong>Name:</strong> {{ legal_case.assigned_counsel }}</p>
+                    {% else %}
+                        <p class="text-muted">No counsel assigned</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if legal_case.remarks %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sticky-note me-2"></i>Remarks
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ legal_case.remarks|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

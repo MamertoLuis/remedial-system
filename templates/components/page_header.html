@@ -1,0 +1,9 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">{{ title }}</h2>
+    {% if subtitle %}<p class="text-muted small mb-0">{{ subtitle }}</p>{% endif %}
+  </div>
+  <div>
+    {{ actions|safe }}
+  </div>
+</div>

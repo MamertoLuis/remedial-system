@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:recoveryaction-list' %}">Recovery Actions</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:recoveryaction-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:recoveryaction-update' action.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Action
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>Action Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Action Type:</dt>
+                        <dd class="col-sm-9">{{ action.get_action_type_display }}</dd>
+                        
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-{{ action.status|lower }}">
+                                {{ action.get_status_display }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-3">Initiated At:</dt>
+                        <dd class="col-sm-9">{{ action.initiated_at }}</dd>
+                        
+                        <dt class="col-sm-3">Created By:</dt>
+                        <dd class="col-sm-9">{{ action.created_by|default:"System" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i>Related Account
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if action.remedial_account %}
+                        <p><strong>Account Number:</strong> {{ action.remedial_account.loan_account_no }}</p>
+                        <p><strong>Borrower Name:</strong> {{ action.remedial_account.borrower_name }}</p>
+                        <p><strong>Balance:</strong> ₱{{ action.remedial_account.outstanding_balance_ref }}</p>
+                        <a href="{% url 'remedial:account-detail' action.remedial_account.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View Account
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No account linked</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-flag-checkered me-2"></i>Associated Milestones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if action.recoverymilestone_set.all %}
+                        <ul class="list-group list-group-flush">
+                            {% for milestone in action.recoverymilestone_set.all %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ milestone.milestone_type }}
+                                    <span class="badge bg-secondary">{{ milestone.get_status_display }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'remedial:recoverymilestone-list' %}?action={{ action.pk }}" class="btn btn-sm btn-outline-primary mt-2">
+                            <i class="fas fa-list"></i> View All Milestones
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No milestones associated</p>
+                        <a href="{% url 'remedial:recoverymilestone-create' %}?action={{ action.pk }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Add Milestone
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:remedialaccount-list' %}">Accounts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Account Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th style="width: 30%;">Account Number:</th>
+                            <td>{{ account.loan_account_no }}</td>
+                        </tr>
+                        <tr>
+                            <th>Borrower Name:</th>
+                            <td>{{ account.borrower_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Borrower ID:</th>
+                            <td>{{ account.borrower_id_ref }}</td>
+                        </tr>
+                        <tr>
+                            <th>Outstanding Balance:</th>
+                            <td>{{ account.outstanding_balance_ref }}</td>
+                        </tr>
+                        <tr>
+                            <th>Stage:</th>
+                            <td>
+                                <span class="badge bg-secondary">{{ account.get_stage_display }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <span class="badge bg-info">{{ account.get_status_display }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Assigned Officer:</th>
+                            <td>{{ account.assigned_officer }}</td>
+                        </tr>
+                        <tr>
+                            <th>Remarks:</th>
+                            <td>{{ account.remarks|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created:</th>
+                            <td>{{ account.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Updated:</th>
+                            <td>{{ account.updated_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>Actions</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'remedial:account-update' account.pk %}" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> Edit Account
+                                </a>
+                                <a href="{% url 'remedial:remedialaccount-list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-list"></i> Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if account.metadata %}
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6>Metadata</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre class="small">{{ account.metadata }}</pre>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

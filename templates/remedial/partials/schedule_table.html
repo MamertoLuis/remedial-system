@@ -1,0 +1,29 @@
+{% if schedule_items %}
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <h3 class="h5">Schedule Items</h3>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Due Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Paid</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for schedule in schedule_items %}
+              <tr>
+                <td>{{ schedule.due_date }}</td>
+                <td>{{ schedule.amount_due }}</td>
+                <td>{{ schedule.get_status_display }}</td>
+                <td>{{ schedule.amount_paid }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:compromiseagreement-list' %}">Compromises</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Compromise Agreement Form</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.agreement_no.id_for_label }}" class="form-label">Agreement Number</label>
+                            {{ form.agreement_no }}
+                            {% if form.agreement_no.errors %}
+                                <div class="text-danger small">{{ form.agreement_no.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.remedial_account.id_for_label }}" class="form-label">Remedial Account</label>
+                            {{ form.remedial_account }}
+                            {% if form.remedial_account.errors %}
+                                <div class="text-danger small">{{ form.remedial_account.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.settlement_amount.id_for_label }}" class="form-label">Settlement Amount</label>
+                            {{ form.settlement_amount }}
+                            {% if form.settlement_amount.errors %}
+                                <div class="text-danger small">{{ form.settlement_amount.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date</label>
+                            {{ form.start_date }}
+                            {% if form.start_date.errors %}
+                                <div class="text-danger small">{{ form.start_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.grace_days.id_for_label }}" class="form-label">Grace Days</label>
+                            {{ form.grace_days }}
+                            {% if form.grace_days.errors %}
+                                <div class="text-danger small">{{ form.grace_days.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.default_threshold_days.id_for_label }}" class="form-label">Default Threshold (Days)</label>
+                            {{ form.default_threshold_days }}
+                            {% if form.default_threshold_days.errors %}
+                                <div class="text-danger small">{{ form.default_threshold_days.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.compromise_signed_date.id_for_label }}" class="form-label">Compromise Signed Date</label>
+                            {{ form.compromise_signed_date }}
+                            {% if form.compromise_signed_date.errors %}
+                                <div class="text-danger small">{{ form.compromise_signed_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small">{{ form.status.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.terms_json.id_for_label }}" class="form-label">Terms (JSON)</label>
+                    {{ form.terms_json }}
+                    {% if form.terms_json.errors %}
+                        <div class="text-danger small">{{ form.terms_json.errors }}</div>
+                    {% endif %}
+                    <div class="form-text">JSON format compromise terms and conditions</div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'remedial:compromiseagreement-list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Compromise Agreement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

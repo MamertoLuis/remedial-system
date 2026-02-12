@@ -1,0 +1,143 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'remedial:dashboard' %}">
+            <i class="fas fa-gavel me-2"></i>
+            Remedial Recovery
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'remedial:dashboard' %}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {% if user.is_authenticated %}active{% endif %}" 
+                       href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i> User
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/admin/">
+                            <i class="fas fa-cog me-1"></i> Admin Panel
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout (Coming Soon)
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <span class="navbar-text">
+                        <i class="fas fa-user me-1"></i>
+                        {{ user.get_full_name|default:user.username|default:"User" }}
+                    </span>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'account' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-users me-1"></i> Accounts
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'remedial:remedialaccount-list' %}" onclick="return true;">
+                            <i class="fas fa-list me-1"></i> All Accounts
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'remedial:account-create' %}" onclick="return true;">
+                            <i class="fas fa-plus me-1"></i> Create Account
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'compromise' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="#" id="compromiseDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-handshake me-1"></i> Compromises
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'remedial:compromiseagreement-list' %}" onclick="return true;">
+                            <i class="fas fa-list me-1"></i> All Compromises
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'remedial:compromise-create' %}" onclick="return true;">
+                            <i class="fas fa-plus me-1"></i> Create Compromise
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'legal' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="#" id="legalDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-gavel me-1"></i> Legal
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'remedial:legalcase-list' %}" onclick="return true;">
+                            <i class="fas fa-list me-1"></i> Legal Cases
+                        </a></li>
+                        <li><a class="dropdown-item" href="#court-hearings" onclick="return false;">
+                            <i class="fas fa-calendar me-1"></i> Court Hearings (Coming Soon)
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'recovery' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="#" id="recoveryDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-shield-alt me-1"></i> Recovery
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'remedial:recoveryaction-list' %}" onclick="return true;">
+                            <i class="fas fa-list me-1"></i> Recovery Actions
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'remedial:recoverymilestone-list' %}" onclick="return true;">
+                            <i class="fas fa-flag-checkered me-1"></i> Milestones
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'writeoff' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="#" id="writeoffDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-file-invoice-dollar me-1"></i> Write-offs
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'remedial:writeoffrequest-list' %}" onclick="return true;">
+                            <i class="fas fa-list me-1"></i> Write-off Requests
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog me-1"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">
+                            <i class="fas fa-tachometer-alt me-1"></i> Admin Panel
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:remedial_remedialaccount_changelist' %}">
+                            <i class="fas fa-users me-1"></i> Accounts
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:remedial_compromiseagreement_changelist' %}">
+                            <i class="fas fa-handshake me-1"></i> Compromises
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:remedial_legalcase_changelist' %}">
+                            <i class="fas fa-gavel me-1"></i> Legal Cases
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/admin/logout/">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <span class="navbar-text">
+                        <i class="fas fa-user me-1"></i>
+                        {{ user.get_full_name|default:user.username|default:"User" }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

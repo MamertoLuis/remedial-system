@@ -1,0 +1,1 @@
+"""Remedial command registry."""

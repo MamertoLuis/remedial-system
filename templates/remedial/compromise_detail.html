@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:compromiseagreement-list' %}">Compromises</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Compromise Agreement Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th style="width: 30%;">Agreement Number:</th>
+                            <td>{{ compromise.agreement_no }}</td>
+                        </tr>
+                        <tr>
+                            <th>Account:</th>
+                            <td>{{ compromise.remedial_account.loan_account_no }}</td>
+                        </tr>
+                        <tr>
+                            <th>Settlement Amount:</th>
+                            <td>{{ compromise.settlement_amount }}</td>
+                        </tr>
+                        <tr>
+                            <th>Start Date:</th>
+                            <td>{{ compromise.start_date|date:"Y-m-d" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Grace Days:</th>
+                            <td>{{ compromise.grace_days }}</td>
+                        </tr>
+                        <tr>
+                            <th>Default Threshold:</th>
+                            <td>{{ compromise.default_threshold_days }} days</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <span class="badge bg-info">{{ compromise.get_status_display }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Compromise Signed Date:</th>
+                            <td>{{ compromise.compromise_signed_date|date:"Y-m-d" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created:</th>
+                            <td>{{ compromise.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Updated:</th>
+                            <td>{{ compromise.updated_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created By:</th>
+                            <td>{{ compromise.created_by }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Terms & Conditions</h6>
+                    <div class="card">
+                        <div class="card-body">
+                            <pre class="small">{{ compromise.terms_json }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'remedial:compromiseagreement-list' %}" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> Back to List
+                </a>
+                <div>
+                    <a href="{% url 'remedial:compromise-update' compromise.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Compromise
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
