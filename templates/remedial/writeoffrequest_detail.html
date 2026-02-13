@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:writeoffrequest-list' %}">Write-Offs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:writeoffrequest-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:writeoffrequest-update' writeoff.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Request
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-file-invoice-dollar me-2"></i>Write-Off Request Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-{{ writeoff.status|lower }}">
+                                {{ writeoff.get_status_display }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-3">Recommended By:</dt>
+                        <dd class="col-sm-9">{{ writeoff.recommended_by|default:"N/A" }}</dd>
+                        
+                        <dt class="col-sm-3">Recommended At:</dt>
+                        <dd class="col-sm-9">{{ writeoff.recommended_at|default:"N/A" }}</dd>
+
+                        <dt class="col-sm-3">Board Resolution Ref:</dt>
+                        <dd class="col-sm-9">{{ writeoff.board_resolution_ref|default:"N/A" }}</dd>
+
+                        <dt class="col-sm-3">Board Decision Date:</dt>
+                        <dd class="col-sm-9">{{ writeoff.board_decision_date|default:"N/A" }}</dd>
+                        
+                        <dt class="col-sm-3">Notes:</dt>
+                        <dd class="col-sm-9">{{ writeoff.notes|default:"No notes" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i>Related Remedial Account
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if writeoff.remedial_account %}
+                        <p><strong>Account No:</strong> {{ writeoff.remedial_account.loan_account_no }}</p>
+                        <p><strong>Borrower:</strong> {{ writeoff.remedial_account.borrower_name }}</p>
+                        <a href="{% url 'remedial:account-detail' writeoff.remedial_account.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View Account
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No remedial account linked</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Created At:</strong> {{ writeoff.created_at }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

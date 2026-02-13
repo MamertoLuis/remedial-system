@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:recoveryaction-list' %}">Recovery Actions</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:recoverymilestone-list' %}">Milestones</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:recoverymilestone-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:recoverymilestone-update' milestone.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Milestone
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-flag-checkered me-2"></i>Milestone Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Milestone Type:</dt>
+                        <dd class="col-sm-9">{{ milestone.milestone_type }}</dd>
+                        
+                        <dt class="col-sm-3">Target Date:</dt>
+                        <dd class="col-sm-9">{{ milestone.target_date }}</dd>
+                        
+                        <dt class="col-sm-3">Actual Date:</dt>
+                        <dd class="col-sm-9">{{ milestone.actual_date|default:"Not set" }}</dd>
+
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-{{ milestone.status|lower }}">
+                                {{ milestone.get_status_display }}
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-3">Notes:</dt>
+                        <dd class="col-sm-9">{{ milestone.notes|default:"No notes" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-link me-2"></i>Related Recovery Action
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if milestone.recovery_action %}
+                        <p><strong>Action Type:</strong> {{ milestone.recovery_action.get_action_type_display }}</p>
+                        <p><strong>Status:</strong> {{ milestone.recovery_action.get_status_display }}</p>
+                        <a href="{% url 'remedial:recoveryaction-detail' milestone.recovery_action.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> View Action
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No recovery action linked</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Created At:</strong> {{ milestone.created_at }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

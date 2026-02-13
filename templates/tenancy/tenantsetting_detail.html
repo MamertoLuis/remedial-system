@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">{{ title }}</h1>
+                <p class="text-gray-600 mt-2">Detailed information about this tenant setting</p>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{% url 'tenancy:tenantsetting-list' %}" 
+                   class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                    Back to List
+                </a>
+                <a href="{% url 'tenancy:tenantsetting-update' object.pk %}" 
+                   class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">
+                    Edit Setting
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Basic Information</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Key:</span>
+                            <p class="text-lg font-mono text-gray-900 mt-1">{{ object.key }}</p>
+                        </div>
+                        
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Value:</span>
+                            <p class="text-lg text-gray-900 mt-1 break-all">{{ object.value }}</p>
+                        </div>
+                        
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Status:</span>
+                            <p class="mt-1">
+                                {% if object.is_active %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Tenant Information</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Tenant:</span>
+                            <p class="text-lg text-gray-900 mt-1">{{ object.tenant.name }}</p>
+                        </div>
+                        
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Description:</span>
+                            <p class="text-gray-700 mt-1">{{ object.description|default:"No description provided" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Timestamps</h3>
+                    
+                    <div class="space-y-2">
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Created:</span>
+                            <p class="text-sm text-gray-700">{{ object.created_at|date:"Y-m-d H:i:s" }}</p>
+                        </div>
+                        
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Last Updated:</span>
+                            <p class="text-sm text-gray-700">{{ object.updated_at|date:"Y-m-d H:i:s" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">System Information</h3>
+                    
+                    <div class="space-y-2">
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Setting ID:</span>
+                            <p class="text-sm text-gray-700 font-mono">#{{ object.id }}</p>
+                        </div>
+                        
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Tenant ID:</span>
+                            <p class="text-sm text-gray-700 font-mono">#{{ object.tenant.id }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if object.description %}
+        <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800">About this setting</h3>
+                    <div class="mt-2 text-sm text-blue-700">
+                        <p>{{ object.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

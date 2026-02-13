@@ -140,7 +140,7 @@ class CompromiseAgreement(TenantAwareModel, TimeStampedModel):
     status = models.CharField(max_length=20, choices=CompromiseStatus.choices, default=CompromiseStatus.DRAFT)
     settlement_amount = models.DecimalField(max_digits=14, decimal_places=2)
     start_date = models.DateField(null=True, blank=True)
-    terms_json = models.JSONField(default=dict, blank=True)
+    terms = models.TextField(blank=True, default="")
     grace_days = models.PositiveSmallIntegerField(default=3)
     default_threshold_days = models.PositiveSmallIntegerField(default=30)
     approved_by = models.ForeignKey(
@@ -182,7 +182,7 @@ class CompromiseAgreement(TenantAwareModel, TimeStampedModel):
         return reverse("remedial:compromise-approve", args=[self.pk])
 
 
-class CompromiseScheduleItem(TimeStampedModel):
+class CompromiseScheduleItem(TenantAwareModel, TimeStampedModel):
     compromise_agreement = models.ForeignKey(
         CompromiseAgreement,
         on_delete=models.CASCADE,
@@ -205,7 +205,7 @@ class CompromiseScheduleItem(TimeStampedModel):
         return f"{self.compromise_agreement} schedule #{self.seq_no}"
 
 
-class CompromisePayment(TimeStampedModel):
+class CompromisePayment(TenantAwareModel, TimeStampedModel):
     compromise_agreement = models.ForeignKey(
         CompromiseAgreement,
         on_delete=models.CASCADE,
@@ -258,7 +258,7 @@ class LegalCase(TimeStampedModel, TenantAwareModel):
         return f"{self.remedial_account.loan_account_no} – {self.get_status_display()}"
 
 
-class CourtHearing(TimeStampedModel):
+class CourtHearing(TenantAwareModel, TimeStampedModel):
     legal_case = models.ForeignKey(
         LegalCase,
         on_delete=models.CASCADE,
@@ -304,7 +304,7 @@ class RecoveryAction(TimeStampedModel, TenantAwareModel):
         return f"{self.remedial_account.loan_account_no} – {self.action_type}"
 
 
-class RecoveryMilestone(TimeStampedModel):
+class RecoveryMilestone(TenantAwareModel, TimeStampedModel):
     recovery_action = models.ForeignKey(
         RecoveryAction,
         on_delete=models.CASCADE,
@@ -352,7 +352,7 @@ class WriteOffRequest(TimeStampedModel, TenantAwareModel):
         return f"Write-off {self.remedial_account.loan_account_no} – {self.get_status_display()}"
 
 
-class RemedialDocument(TimeStampedModel):
+class RemedialDocument(TenantAwareModel, TimeStampedModel):
     ENTITY_CHOICES = [
         ("remedial_account", "Remedial Account"),
         ("compromise_agreement", "Compromise Agreement"),
@@ -391,7 +391,7 @@ class RemedialDocument(TimeStampedModel):
         return f"{self.doc_type} v{self.version}"
 
 
-class NotificationRule(TimeStampedModel):
+class NotificationRule(TenantAwareModel, TimeStampedModel):
     rule_code = models.CharField(max_length=64, unique=True)
     status = models.CharField(max_length=10, choices=NotificationRuleStatus.choices, default=NotificationRuleStatus.ENABLED)
     days_before = models.IntegerField(null=True, blank=True)
@@ -410,7 +410,7 @@ class NotificationRule(TimeStampedModel):
         return self.rule_code
 
 
-class NotificationLog(TimeStampedModel):
+class NotificationLog(TenantAwareModel, TimeStampedModel):
     rule_code = models.CharField(max_length=64)
     entity_type = models.CharField(max_length=50)
     entity_id = models.UUIDField()

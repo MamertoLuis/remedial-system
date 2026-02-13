@@ -1933,3 +1933,107 @@ Not Found: /accounts
 "GET /remedial/compromises/create/ HTTP/1.1" 200 15252
 "GET /remedial/dashboard/ HTTP/1.1" 200 17729
 "GET /remedial/dashboard/ HTTP/1.1" 200 17729
+Watching for file changes with StatReloader
+Invalid HTTP_HOST header: '100.70.187.4:8000'. You may need to add '100.70.187.4' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/utils/deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/http/request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '100.70.187.4:8000'. You may need to add '100.70.187.4' to ALLOWED_HOSTS.
+"GET /remedial/ HTTP/1.1" 400 67638
+Invalid HTTP_HOST header: '100.70.187.4:8000'. You may need to add '100.70.187.4' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/utils/deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/http/request.py", line 202, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '100.70.187.4:8000'. You may need to add '100.70.187.4' to ALLOWED_HOSTS.
+"GET /favicon.ico HTTP/1.1" 400 67489
+Watching for file changes with StatReloader
+"GET /remedial/ HTTP/1.1" 200 5629
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 2525
+"POST /remedial/ HTTP/1.1" 302 0
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/my-cases/ HTTP/1.1" 200 8685
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/my-cases/ HTTP/1.1" 200 8685
+"GET /remedial/accounts/53b66165-b007-4564-8d27-26375c41b280/ HTTP/1.1" 200 10991
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8252
+"GET /remedial/compromises/1/edit/ HTTP/1.1" 200 9585
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/legal-cases/ HTTP/1.1" 200 7032
+"GET /remedial/legal-cases/create/ HTTP/1.1" 200 8361
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/accounts/d5ebe1ee-8dab-4017-8499-b1cb885ef3d4/edit/ HTTP/1.1" 200 9845
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8252
+Watching for file changes with StatReloader
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 2525
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8252
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+Not Found: /remedial/da
+"GET /remedial/da HTTP/1.1" 404 11894
+Watching for file changes with StatReloader
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 2676
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/my-cases/ HTTP/1.1" 200 8685
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8252
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/recovery-actions/ HTTP/1.1" 200 5522
+"GET /remedial/recovery-actions/create/ HTTP/1.1" 200 6943
+"POST /remedial/recovery-actions/create/ HTTP/1.1" 302 0
+"GET /remedial/recovery-actions/ HTTP/1.1" 200 6981
+Internal Server Error: /remedial/recovery-actions/1/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/detail.py", line 113, in get
+    context = self.get_context_data(object=self.object)
+  File "/home/marty/remedial-system/apps/remedial/views.py", line 436, in get_context_data
+    context['title'] = f'Recovery Action Details - {self.action_type}'
+AttributeError: 'RecoveryActionDetailView' object has no attribute 'action_type'
+"GET /remedial/recovery-actions/1/ HTTP/1.1" 500 78210
+Watching for file changes with StatReloader
+"GET /remedial/recovery-actions/1/ HTTP/1.1" 200 8177
+"GET /remedial/recovery-actions/ HTTP/1.1" 200 6981
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/my-cases/ HTTP/1.1" 200 8685
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/accounts/53b66165-b007-4564-8d27-26375c41b280/ HTTP/1.1" 200 11213
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8252
+/home/marty/remedial-system/apps/remedial/models.py changed, reloading.
+Watching for file changes with StatReloader

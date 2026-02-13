@@ -63,10 +63,10 @@ class CompromiseAgreementForm(forms.ModelForm):
         model = models.CompromiseAgreement
         fields = [
             "agreement_no", "remedial_account", "settlement_amount", "start_date", 
-            "terms_json", "grace_days", "default_threshold_days", "compromise_signed_date"
+            "terms", "grace_days", "default_threshold_days", "compromise_signed_date"
         ]
         widgets = {
-            "terms_json": forms.Textarea(attrs={"rows": 4, "placeholder": "JSON terms"}),
+            "terms": forms.Textarea(attrs={"rows": 4, "placeholder": "Memo or notes"}),
             "settlement_amount": forms.NumberInput(attrs={"step": "0.01"}),
         }
     
@@ -81,7 +81,7 @@ class CompromiseAgreementForm(forms.ModelForm):
                 Field("remedial_account"),
                 Field("settlement_amount"),
                 Field("start_date"),
-                Field("terms_json"),
+                Field("terms"),
                 Div(
                     Field("grace_days"),
                     Field("default_threshold_days"),
@@ -104,14 +104,9 @@ class CompromiseAgreementForm(forms.ModelForm):
             raise forms.ValidationError("Settlement amount must be positive.")
         return amount
     
-    def clean_terms_json(self):
-        terms = self.cleaned_data.get("terms_json", "{}")
-        if terms:
-            try:
-                json.loads(terms)
-            except json.JSONDecodeError:
-                raise ValidationError("Terms must be valid JSON")
-        return terms
+    def clean_terms(self):
+        terms = self.cleaned_data.get("terms", "")
+        return terms.strip()
 
 
 class CompromiseScheduleItemForm(forms.ModelForm):
@@ -421,6 +416,36 @@ class RemedialDocumentForm(forms.ModelForm):
         
         return cleaned_data
 
+
+# ===== NOTIFICATION FORMS =====
+
+class NotificationRuleForm(forms.ModelForm):
+    """Form for managing notification rules"""
+
+    class Meta:
+        model = models.NotificationRule
+        fields = [
+            "rule_code", "status", "days_before", "days_after", 
+            "email_to_role", "email_to_specific", "template_code"
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = True
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Div(
+                Field("rule_code"),
+                Field("status"),
+                Field("days_before"),
+                Field("days_after"),
+                Field("email_to_role"),
+                Field("email_to_specific"),
+                Field("template_code"),
+                Submit("submit", "Save Rule"),
+            )
+        )
 
 # ===== SEARCH AND FILTER FORMS =====
 

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Domain - {{ object.domain }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Delete Domain</h1>
+
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-red-700">
+                        <strong>Warning:</strong> You are about to delete the domain "{{ object.domain }}" from tenant "{{ object.tenant.name }}". This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Domain Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Domain:</span>
+                    <p class="text-lg">{{ object.domain }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Tenant:</span>
+                    <p class="text-lg">{{ object.tenant.name }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Primary Domain:</span>
+                    <p>{% if object.is_primary %}Yes{% else %}No{% endif %}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Status:</span>
+                    <p>{% if object.is_active %}Active{% else %}Inactive{% endif %}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Created:</span>
+                    <p>{{ object.created_at|date:"Y-m-d H:i" }}</p>
+                </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-500">Updated:</span>
+                    <p>{{ object.updated_at|date:"Y-m-d H:i" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="flex justify-end space-x-4">
+            {% csrf_token %}
+            <a href="{% url 'tenancy:tenantdomain-list' %}" 
+               class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                Cancel
+            </a>
+            <button type="submit" 
+                    class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors">
+                Delete Domain
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

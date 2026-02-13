@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:notificationrule-list' %}">Notification Rules</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:notificationrule-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'remedial:notificationrule-update' rule.pk %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Rule
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-bell me-2"></i>Notification Rule Details
+            </h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Rule Code:</dt>
+                <dd class="col-sm-9">{{ rule.rule_code }}</dd>
+                
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">{{ rule.get_status_display }}</dd>
+
+                <dt class="col-sm-3">Days Before:</dt>
+                <dd class="col-sm-9">{{ rule.days_before|default:"N/A" }}</dd>
+
+                <dt class="col-sm-3">Days After:</dt>
+                <dd class="col-sm-9">{{ rule.days_after|default:"N/A" }}</dd>
+
+                <dt class="col-sm-3">Email To Role:</dt>
+                <dd class="col-sm-9">{{ rule.email_to_role|default:"N/A" }}</dd>
+
+                <dt class="col-sm-3">Email To Specific:</dt>
+                <dd class="col-sm-9">{{ rule.email_to_specific|default:"N/A" }}</dd>
+
+                <dt class="col-sm-3">Template Code:</dt>
+                <dd class="col-sm-9">{{ rule.template_code }}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -17,14 +17,15 @@ class TimeStampedModel(models.Model):
 class TenantAwareModel(models.Model):
     tenant = models.ForeignKey(
         "tenancy.Tenant",
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
         related_name="%(class)s_objects",
     )
 
     class Meta:
         abstract = True
+        constraints = []  # We'll add tenant constraints manually per model
 
 
 class AuditLog(TimeStampedModel):
@@ -40,8 +41,6 @@ class AuditLog(TimeStampedModel):
     tenant = models.ForeignKey(
         "tenancy.Tenant",
         on_delete=models.PROTECT,
-        null=True,
-        blank=True,
         related_name="audit_logs",
     )
     actor = models.ForeignKey(

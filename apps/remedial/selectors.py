@@ -53,6 +53,18 @@ def dashboard_accounts_overview(tenant, officer=None, stage=None, status=None, d
     return queryset
 
 
+def get_dashboard_overview_data(tenant):
+    """Get overview data for the dashboard."""
+    return {
+        'accounts_count': models.RemedialAccount.objects.filter(tenant=tenant).count(),
+        'compromises_count': models.CompromiseAgreement.objects.filter(tenant=tenant).count(),
+        'legal_cases_count': models.LegalCase.objects.filter(tenant=tenant).count(),
+        'hearings_count': models.CourtHearing.objects.filter(tenant=tenant).count(),
+        'recovery_actions_count': models.RecoveryAction.objects.filter(tenant=tenant).count(),
+        'milestones_count': models.RecoveryMilestone.objects.filter(tenant=tenant).count(),
+        'write_offs_count': models.WriteOffRequest.objects.filter(tenant=tenant).count(),
+    }
+
 def dashboard_compromise_summary(tenant):
     """Compromise agreements summary with status counts and amounts"""
     return (

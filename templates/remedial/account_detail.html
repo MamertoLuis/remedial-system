@@ -100,5 +100,31 @@
             </div>
         </div>
     </div>
+
+    <div class="mt-4">
+        <h2>Related Activities</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="compromises-tab" data-bs-toggle="tab" data-bs-target="#compromises" type="button" role="tab" aria-controls="compromises" aria-selected="true">Compromises</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="legal-cases-tab" data-bs-toggle="tab" data-bs-target="#legal-cases" type="button" role="tab" aria-controls="legal-cases" aria-selected="false">Legal Cases</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="recovery-actions-tab" data-bs-toggle="tab" data-bs-target="#recovery-actions" type="button" role="tab" aria-controls="recovery-actions" aria-selected="false">Recovery Actions</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="compromises" role="tabpanel" aria-labelledby="compromises-tab">
+                {% include "remedial/partials/compromise_table.html" with compromises=compromises %}
+            </div>
+            <div class="tab-pane fade" id="legal-cases" role="tabpanel" aria-labelledby="legal-cases-tab">
+                {% include "remedial/partials/legalcase_table.html" with legal_cases=legal_cases %}
+            </div>
+            <div class="tab-pane fade" id="recovery-actions" role="tabpanel" aria-labelledby="recovery-actions-tab">
+                {% include "remedial/partials/recoveryaction_table.html" with recovery_actions=recovery_actions %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

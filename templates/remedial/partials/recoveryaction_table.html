@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Action Type</th>
+            <th>Status</th>
+            <th>Initiated By</th>
+            <th>Initiated At</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for action in account.recovery_actions.all %}
+        <tr>
+            <td>{{ action.get_action_type_display }}</td>
+            <td><span class="badge bg-warning">{{ action.get_status_display }}</span></td>
+            <td>{{ action.initiated_by|default:"-" }}</td>
+            <td>{{ action.initiated_at|date:"Y-m-d H:i"|default:"-" }}</td>
+            <td>
+                <a href="{% url 'remedial:recoveryaction-detail' action.pk %}" class="btn btn-sm btn-info">View</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No recovery actions found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

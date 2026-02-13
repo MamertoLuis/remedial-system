@@ -77,16 +77,16 @@
                 </div>
             </div>
             
-            <div class="row mt-3">
-                <div class="col-12">
-                    <h6>Terms & Conditions</h6>
-                    <div class="card">
-                        <div class="card-body">
-                            <pre class="small">{{ compromise.terms_json }}</pre>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Terms / Notes</h6>
+                        <div class="card">
+                            <div class="card-body">
+                                <pre class="small">{{ compromise.terms }}</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             
             <div class="d-flex justify-content-between mt-4">
                 <a href="{% url 'remedial:compromiseagreement-list' %}" class="btn btn-secondary">

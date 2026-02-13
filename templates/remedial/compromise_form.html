@@ -94,12 +94,12 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="{{ form.terms_json.id_for_label }}" class="form-label">Terms (JSON)</label>
-                    {{ form.terms_json }}
-                    {% if form.terms_json.errors %}
-                        <div class="text-danger small">{{ form.terms_json.errors }}</div>
+                    <label for="{{ form.terms.id_for_label }}" class="form-label">Terms Memo</label>
+                    {{ form.terms }}
+                    {% if form.terms.errors %}
+                        <div class="text-danger small">{{ form.terms.errors }}</div>
                     {% endif %}
-                    <div class="form-text">JSON format compromise terms and conditions</div>
+                    <div class="form-text">Describe the negotiated terms, milestones, or notes for this agreement.</div>
                 </div>
                 
                 <div class="d-flex justify-content-between">
