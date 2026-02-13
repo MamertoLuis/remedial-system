@@ -258,7 +258,9 @@ class CompromiseDetailView(DetailView):
     context_object_name = 'compromise'
     
     def get_queryset(self):
-        return models.CompromiseAgreement.objects.filter(tenant=self.request.tenant)
+        return models.CompromiseAgreement.objects.filter(tenant=self.request.tenant).prefetch_related(
+            'schedule_items__payments'
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1127,6 +1129,8 @@ class CompromisePaymentListView(ListView):
         return context
 
 
+
+
     
 
 
@@ -1146,6 +1150,29 @@ class CompromisePaymentCreateView(CreateView):
 
 
     success_url = reverse_lazy('remedial:compromisepayment-list')
+
+
+    def get_compromise_agreement(self):
+
+        if not hasattr(self, '_compromise_agreement'):
+
+            compromise_id = self.request.GET.get('compromise_id')
+
+            if compromise_id:
+
+                self._compromise_agreement = models.CompromiseAgreement.objects.filter(
+
+                    id=compromise_id,
+
+                    tenant=self.request.tenant,
+
+                ).first()
+
+            else:
+
+                self._compromise_agreement = None
+
+        return self._compromise_agreement
 
 
     
@@ -1175,31 +1202,7 @@ class CompromisePaymentCreateView(CreateView):
         kwargs = super().get_form_kwargs()
 
 
-        # Get compromise agreement ID from URL if provided
-
-
-        compromise_id = self.request.GET.get('compromise_id')
-
-
-        if compromise_id:
-
-
-            try:
-
-
-                kwargs['compromise_agreement'] = models.CompromiseAgreement.objects.get(
-
-
-                    id=compromise_id, tenant=self.request.tenant
-
-
-                )
-
-
-            except models.CompromiseAgreement.DoesNotExist:
-
-
-                pass
+        kwargs['compromise_agreement'] = self.get_compromise_agreement()
 
 
         return kwargs
@@ -1211,7 +1214,22 @@ class CompromisePaymentCreateView(CreateView):
     def form_valid(self, form):
 
 
+        compromise = self.get_compromise_agreement()
+
+
+        if not compromise:
+
+
+            form.add_error(None, 'Compromise agreement is required to record this payment.')
+
+
+            return self.form_invalid(form)
+
+
         payment = form.save(commit=False)
+
+
+        payment.compromise_agreement = compromise
 
 
         payment.tenant = self.request.tenant
@@ -1493,6 +1511,39 @@ class CompromiseScheduleItemCreateView(CreateView):
 
     
 
+    
+    def get_compromise_agreement(self):
+
+
+        if not hasattr(self, '_compromise_agreement'):
+
+
+            compromise_id = self.request.GET.get('compromise_id')
+
+
+            if compromise_id:
+
+
+                self._compromise_agreement = models.CompromiseAgreement.objects.filter(
+
+
+                    id=compromise_id,
+
+
+                    tenant=self.request.tenant,
+
+
+                ).first()
+
+
+            else:
+
+
+                self._compromise_agreement = None
+
+
+        return self._compromise_agreement
+
 
     def get_context_data(self, **kwargs):
 
@@ -1511,38 +1562,14 @@ class CompromiseScheduleItemCreateView(CreateView):
 
     
 
-
+    
     def get_form_kwargs(self):
 
 
         kwargs = super().get_form_kwargs()
 
 
-        # Get compromise agreement ID from URL if provided
-
-
-        compromise_id = self.request.GET.get('compromise_id')
-
-
-        if compromise_id:
-
-
-            try:
-
-
-                kwargs['compromise_agreement'] = models.CompromiseAgreement.objects.get(
-
-
-                    id=compromise_id, tenant=self.request.tenant
-
-
-                )
-
-
-            except models.CompromiseAgreement.DoesNotExist:
-
-
-                pass
+        kwargs['compromise_agreement'] = self.get_compromise_agreement()
 
 
         return kwargs
@@ -1550,11 +1577,26 @@ class CompromiseScheduleItemCreateView(CreateView):
 
     
 
-
+    
     def form_valid(self, form):
 
 
+        compromise = self.get_compromise_agreement()
+
+
+        if not compromise:
+
+
+            form.add_error(None, 'Compromise agreement is required to add a schedule item.')
+
+
+            return self.form_invalid(form)
+
+
         schedule_item = form.save(commit=False)
+
+
+        schedule_item.compromise_agreement = compromise
 
 
         schedule_item.tenant = self.request.tenant
@@ -1598,10 +1640,7 @@ class CompromiseScheduleItemDetailView(DetailView):
             'compromise_agreement__remedial_account',
 
 
-            'payments'
-
-
-        )
+        ).prefetch_related('payments')
 
 
     
@@ -2144,5 +2183,3 @@ def bootstrap_test_view(request):
 
 
     return render(request, 'bootstrap_test.html')
-
-

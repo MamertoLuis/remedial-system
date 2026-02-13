@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h1>{{ title }}</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:compromisepayment-list' %}">Payments</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'remedial:compromisepayment-update' payment.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit Payment
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Payment Overview</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-5">Agreement</dt>
+                        <dd class="col-sm-7">
+                            <a href="{% url 'remedial:compromise-detail' payment.compromise_agreement.pk %}">
+                                {{ payment.compromise_agreement.agreement_no }}
+                            </a>
+                        </dd>
+                        <dt class="col-sm-5">Schedule Item</dt>
+                        <dd class="col-sm-7">
+                            {% if payment.schedule_item %}
+                                #{{ payment.schedule_item.seq_no }} - {{ payment.schedule_item.get_status_display }}
+                            {% else %}
+                                <span class="text-muted">Not tied to schedule</span>
+                            {% endif %}
+                        </dd>
+                        <dt class="col-sm-5">Amount</dt>
+                        <dd class="col-sm-7">₱{{ payment.amount|floatformat:2 }}</dd>
+                        <dt class="col-sm-5">Payment Date</dt>
+                        <dd class="col-sm-7">{{ payment.payment_date|date:"Y-m-d" }}</dd>
+                        <dt class="col-sm-5">Reference</dt>
+                        <dd class="col-sm-7">{{ payment.reference_no|default:'—' }}</dd>
+                        <dt class="col-sm-5">Recorded By</dt>
+                        <dd class="col-sm-7">{{ payment.received_by }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Audit & Metadata</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Created At</dt>
+                        <dd class="col-sm-7">{{ payment.created_at|date:"Y-m-d H:i" }}</dd>
+                        <dt class="col-sm-5">Updated At</dt>
+                        <dd class="col-sm-7">{{ payment.updated_at|date:"Y-m-d H:i" }}</dd>
+                        <dt class="col-sm-5">Tenant</dt>
+                        <dd class="col-sm-7">{{ payment.tenant }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

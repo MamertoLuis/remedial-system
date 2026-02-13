@@ -2037,3 +2037,518 @@ Watching for file changes with StatReloader
 "GET /remedial/compromises/1/ HTTP/1.1" 200 8252
 /home/marty/remedial-system/apps/remedial/models.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Internal Server Error: /remedial/compromises/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such column: remedial_compromiseagreement.terms
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 172, in render
+    return self._render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 979, in render_annotated
+    return self.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 979, in render_annotated
+    return self.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/base.py", line 979, in render_annotated
+    return self.render(context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/defaulttags.py", line 199, in render
+    len_values = len(values)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such column: remedial_compromiseagreement.terms
+"GET /remedial/compromises/ HTTP/1.1" 500 227500
+"GET /remedial/ HTTP/1.1" 200 5629
+"POST /remedial/ HTTP/1.1" 302 0
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+Internal Server Error: /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such column: remedial_compromiseagreement.terms
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/detail.py", line 112, in get
+    self.object = self.get_object()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/detail.py", line 53, in get_object
+    obj = queryset.get()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1956, in _fetch_all
+    self._prefetch_related_objects()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1330, in _prefetch_related_objects
+    prefetch_related_objects(self._result_cache, *self._prefetch_related_lookups)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 2408, in prefetch_related_objects
+    obj_list, additional_lookups = prefetch_one_level(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 2572, in prefetch_one_level
+    ) = prefetcher.get_prefetch_querysets(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/fields/related_descriptors.py", line 800, in get_prefetch_querysets
+    for rel_obj in queryset:
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 386, in __iter__
+    self._fetch_all()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such column: remedial_compromiseagreement.terms
+"GET /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/ HTTP/1.1" 500 185250
+"GET /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/ HTTP/1.1" 200 10975
+"GET /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/edit/ HTTP/1.1" 200 9812
+"POST /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/edit/ HTTP/1.1" 302 0
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/accounts/d5ebe1ee-8dab-4017-8499-b1cb885ef3d4/ HTTP/1.1" 200 10753
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/legal-cases/ HTTP/1.1" 200 7032
+"GET /remedial/legal-cases/1/ HTTP/1.1" 200 8353
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/recovery-actions/ HTTP/1.1" 200 6981
+"GET /remedial/recovery-actions/1/ HTTP/1.1" 200 8177
+"GET /remedial/recovery-actions/ HTTP/1.1" 200 6981
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+"GET /remedial/compromises/1/edit/ HTTP/1.1" 200 9514
+"POST /remedial/compromises/1/edit/ HTTP/1.1" 302 0
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+"GET /remedial/compromises/ HTTP/1.1" 200 7100
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
+"GET /remedial/accounts/ HTTP/1.1" 200 10026
+"GET /remedial/accounts/a7403330-642c-4b9f-b8b4-d79a9cedd6c4/ HTTP/1.1" 200 10975
+"GET /remedial/accounts/53b66165-b007-4564-8d27-26375c41b280/ HTTP/1.1" 200 11213
+"GET /remedial/compromises/1/ HTTP/1.1" 200 8287
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /remedial/compromises/1/ HTTP/1.1" 200 9219
+"GET /remedial/schedule-items/create/?compromise_id=1 HTTP/1.1" 200 5974
+Internal Server Error: /remedial/schedule-items/create/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.IntegrityError: NOT NULL constraint failed: remedial_compromisescheduleitem.compromise_agreement_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 182, in post
+    return super().post(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 151, in post
+    return self.form_valid(form)
+  File "/home/marty/remedial-system/apps/remedial/views.py", line 1565, in form_valid
+    schedule_item.save()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.IntegrityError: NOT NULL constraint failed: remedial_compromisescheduleitem.compromise_agreement_id
+"POST /remedial/schedule-items/create/?compromise_id=1 HTTP/1.1" 500 173164
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /remedial/schedule-items/create/?compromise_id=1 HTTP/1.1" 302 0
+Internal Server Error: /remedial/schedule-items/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/scheduleitem_list.html, remedial/compromisescheduleitem_list.html
+"GET /remedial/schedule-items/ HTTP/1.1" 500 80849
+"GET /remedial/schedule-items/create/?compromise_id=1 HTTP/1.1" 200 5974
+"POST /remedial/schedule-items/create/?compromise_id=1 HTTP/1.1" 302 0
+Internal Server Error: /remedial/schedule-items/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/scheduleitem_list.html, remedial/compromisescheduleitem_list.html
+"GET /remedial/schedule-items/ HTTP/1.1" 500 80849
+"GET /remedial/schedule-items/ HTTP/1.1" 200 8380
+Internal Server Error: /remedial/schedule-items/2/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/detail.py", line 112, in get
+    self.object = self.get_object()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/detail.py", line 53, in get_object
+    obj = queryset.get()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 85, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 74, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 299, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1396, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'payments'. Choices are: tenant, compromise_agreement
+"GET /remedial/schedule-items/2/ HTTP/1.1" 500 145065
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /remedial/schedule-items/2/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/scheduleitem_detail.html
+"GET /remedial/schedule-items/2/ HTTP/1.1" 500 78498
+"GET /remedial/compromises/1/ HTTP/1.1" 200 12342
+Internal Server Error: /remedial/schedule-items/2/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/scheduleitem_detail.html
+"GET /remedial/schedule-items/2/ HTTP/1.1" 500 78360
+Internal Server Error: /remedial/schedule-items/2/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/scheduleitem_detail.html
+"GET /remedial/schedule-items/2/ HTTP/1.1" 500 78497
+"GET /remedial/schedule-items/2/ HTTP/1.1" 200 8683
+"GET /remedial/payments/create/?compromise_id=1 HTTP/1.1" 200 5855
+Internal Server Error: /remedial/payments/create/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.IntegrityError: NOT NULL constraint failed: remedial_compromisepayment.compromise_agreement_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 182, in post
+    return super().post(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 151, in post
+    return self.form_valid(form)
+  File "/home/marty/remedial-system/apps/remedial/views.py", line 1225, in form_valid
+    payment.save()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.IntegrityError: NOT NULL constraint failed: remedial_compromisepayment.compromise_agreement_id
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 500 170115
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /remedial/payments/create/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 182, in post
+    return super().post(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 149, in post
+    form = self.get_form()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 37, in get_form
+    return form_class(**self.get_form_kwargs())
+  File "/home/marty/remedial-system/apps/remedial/views.py", line 1203, in get_form_kwargs
+    kwargs['compromise_agreement'] = self.get_compromise_agreement()
+AttributeError: 'CompromisePaymentCreateView' object has no attribute 'get_compromise_agreement'
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 500 87852
+Internal Server Error: /remedial/payments/create/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 182, in post
+    return super().post(request, *args, **kwargs)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 149, in post
+    form = self.get_form()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/views/generic/edit.py", line 37, in get_form
+    return form_class(**self.get_form_kwargs())
+  File "/home/marty/remedial-system/apps/remedial/views.py", line 1203, in get_form_kwargs
+    kwargs['compromise_agreement'] = self.get_compromise_agreement()
+AttributeError: 'CompromisePaymentCreateView' object has no attribute 'get_compromise_agreement'
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 500 87852
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/marty/remedial-system/apps/remedial/views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 302 0
+Internal Server Error: /remedial/payments/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/compromisepayment_list.html, remedial/compromisepayment_list.html
+"GET /remedial/payments/ HTTP/1.1" 500 80779
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 302 0
+"GET /remedial/payments/ HTTP/1.1" 200 7780
+"GET /remedial/compromises/1/ HTTP/1.1" 200 12342
+"GET /remedial/schedule-items/1/ HTTP/1.1" 200 10329
+"GET /remedial/payments/create/?compromise_id=1 HTTP/1.1" 200 5855
+"POST /remedial/payments/create/?compromise_id=1 HTTP/1.1" 302 0
+"GET /remedial/payments/ HTTP/1.1" 200 8688
+"GET /remedial/compromises/1/ HTTP/1.1" 200 12342
+"GET /remedial/schedule-items/1/ HTTP/1.1" 200 10892
+Internal Server Error: /remedial/payments/2/
+Traceback (most recent call last):
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+  File "/home/marty/remedial-system/.venv/lib/python3.10/site-packages/django/template/loader.py", line 47, in select_template
+    raise TemplateDoesNotExist(", ".join(template_name_list), chain=chain)
+django.template.exceptions.TemplateDoesNotExist: remedial/compromisepayment_detail.html
+"GET /remedial/payments/2/ HTTP/1.1" 500 78384
+"GET /remedial/payments/2/ HTTP/1.1" 200 7311
+"GET /remedial/payments/2/edit/ HTTP/1.1" 200 5883
+"POST /remedial/payments/2/edit/ HTTP/1.1" 302 0
+"GET /remedial/payments/ HTTP/1.1" 200 8688
+"GET /remedial/payments/create/ HTTP/1.1" 200 5855
+"POST /remedial/payments/create/ HTTP/1.1" 200 6022
+"POST /remedial/payments/create/ HTTP/1.1" 200 6022
+"GET /remedial/dashboard/ HTTP/1.1" 200 11948
