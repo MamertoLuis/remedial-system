@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
@@ -1458,16 +1458,64 @@ class CompromiseScheduleItemListView(ListView):
     
 
 
+    def get_compromise_agreement(self):
+
+
+        if not hasattr(self, '_compromise_agreement'):
+
+
+            compromise_id = self.request.GET.get('compromise_id')
+
+
+            if not compromise_id:
+
+
+                raise Http404('Compromise agreement is required to view schedule items.')
+
+
+            self._compromise_agreement = get_object_or_404(
+
+
+                models.CompromiseAgreement.objects.select_related('remedial_account'),
+
+
+                pk=compromise_id,
+
+
+                tenant=self.request.tenant,
+
+
+            )
+
+
+        return self._compromise_agreement
+
+
+    
+
+
     def get_queryset(self):
 
 
-        return models.CompromiseScheduleItem.objects.filter(tenant=self.request.tenant).select_related(
+        compromise = self.get_compromise_agreement()
+
+
+        return models.CompromiseScheduleItem.objects.filter(
+
+
+            tenant=self.request.tenant,
+
+
+            compromise_agreement=compromise,
+
+
+        ).select_related(
 
 
             'compromise_agreement__remedial_account'
 
 
-        ).order_by('compromise_agreement', 'seq_no')
+        ).order_by('seq_no')
 
 
     
@@ -1479,7 +1527,16 @@ class CompromiseScheduleItemListView(ListView):
         context = super().get_context_data(**kwargs)
 
 
-        context['title'] = 'Compromise Schedule Items'
+        compromise = self.get_compromise_agreement()
+
+
+        context['title'] = f'Schedule Items - {compromise.agreement_no}'
+
+
+        context['compromise'] = compromise
+
+
+        context['account'] = compromise.remedial_account
 
 
         context['active_page'] = 'schedule-items'
@@ -1551,7 +1608,22 @@ class CompromiseScheduleItemCreateView(CreateView):
         context = super().get_context_data(**kwargs)
 
 
-        context['title'] = 'Create Schedule Item'
+        compromise = self.get_compromise_agreement()
+
+
+        if compromise:
+
+
+            context['title'] = f'Create Schedule Item - {compromise.agreement_no}'
+
+
+            context['compromise'] = compromise
+
+
+        else:
+
+
+            context['title'] = 'Create Schedule Item'
 
 
         context['active_page'] = 'schedule-items'
@@ -1608,6 +1680,24 @@ class CompromiseScheduleItemCreateView(CreateView):
         
 
         return super().form_valid(form)
+
+
+    def get_success_url(self):
+
+
+        base_url = reverse('remedial:scheduleitem-list')
+
+
+        compromise = self.get_compromise_agreement()
+
+
+        if compromise:
+
+
+            return f"{base_url}?compromise_id={compromise.pk}"
+
+
+        return base_url
 
 
     
@@ -1707,6 +1797,15 @@ class CompromiseScheduleItemUpdateView(UpdateView):
 
 
         return context
+
+
+    def get_success_url(self):
+
+
+        base_url = reverse('remedial:scheduleitem-list')
+
+
+        return f"{base_url}?compromise_id={self.object.compromise_agreement.pk}"
 
 
 # ===== COMPROMISE APPROVAL WORKFLOW VIEWS =====

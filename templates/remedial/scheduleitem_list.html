@@ -11,9 +11,20 @@
                     <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                 </ol>
             </nav>
+            <p class="text-muted small mb-0">
+                <strong>Compromise:</strong>
+                <a href="{% url 'remedial:compromise-detail' compromise.pk %}">
+                    {{ compromise.agreement_no }}
+                </a>
+                &bull;
+                <strong>Account:</strong>
+                <a href="{{ account.get_absolute_url }}">
+                    {{ account.loan_account_no }}
+                </a>
+            </p>
         </div>
         <div class="col-auto">
-            <a href="{% url 'remedial:scheduleitem-create' %}" class="btn btn-primary">
+            <a href="{% url 'remedial:scheduleitem-create' %}?compromise_id={{ compromise.pk }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Add Schedule Item
             </a>
         </div>
@@ -68,7 +79,7 @@
                             <td colspan="7" class="text-center py-4">
                                 <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
                                 <p class="text-muted">No schedule items registered yet.</p>
-                                <a href="{% url 'remedial:scheduleitem-create' %}" class="btn btn-success">
+                                <a href="{% url 'remedial:scheduleitem-create' %}?compromise_id={{ compromise.pk }}" class="btn btn-success">
                                     <i class="fas fa-plus"></i> Create Schedule Item
                                 </a>
                             </td>

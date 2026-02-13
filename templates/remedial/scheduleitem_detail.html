@@ -8,7 +8,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'remedial:dashboard' %}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'remedial:scheduleitem-list' %}">Schedule Items</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'remedial:scheduleitem-list' %}?compromise_id={{ schedule_item.compromise_agreement.pk }}">Schedule Items</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
                 </ol>
             </nav>
