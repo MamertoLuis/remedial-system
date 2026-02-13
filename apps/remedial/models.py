@@ -119,7 +119,7 @@ class RemedialAccount(TenantAwareModel, TimeStampedModel):
     def get_absolute_url(self):
         from django.urls import reverse
 
-        return reverse("remedial:remedialaccount-detail", args=[self.pk])
+        return reverse("remedial:account-detail", args=[self.pk])
     
     def get_documents(self):
         """Get all related documents for this account"""
